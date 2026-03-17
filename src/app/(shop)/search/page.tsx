@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { Suspense, useEffect, useState, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Loader2, SearchX } from 'lucide-react';
 import { SearchBox } from '@/components/shop/SearchBox';
@@ -31,7 +31,15 @@ interface SearchResponse {
   };
 }
 
-export default function SearchPage() {
+export default function SearchPageWrapper() {
+  return (
+    <Suspense fallback={<div className="container-main py-12 text-center"><Loader2 className="h-8 w-8 animate-spin mx-auto text-primary-600" /></div>}>
+      <SearchPage />
+    </Suspense>
+  );
+}
+
+function SearchPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
 

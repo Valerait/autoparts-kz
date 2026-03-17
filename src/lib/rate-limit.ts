@@ -44,8 +44,8 @@ export function getOtpRateLimit() {
 if (typeof setInterval !== 'undefined') {
   setInterval(() => {
     const now = Date.now();
-    for (const [key, entry] of rateMap.entries()) {
+    rateMap.forEach((entry, key) => {
       if (now > entry.resetAt) rateMap.delete(key);
-    }
+    });
   }, 300_000);
 }

@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ShoppingCart, MessageCircle, Package, Truck, ChevronRight } from 'lucide-react';
-import prisma from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 import { Badge } from '@/components/ui/Badge';
 import { formatPrice } from '@/utils/format';
 import { AddToCartButton } from './AddToCartButton';

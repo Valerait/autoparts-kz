@@ -1,6 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { MessageCircle, Phone, Mail, MapPin } from 'lucide-react';
-import { getContent } from '@/lib/content';
+import { useEffect, useState } from 'react';
 
 interface FooterContent {
   companyDesc: string;
@@ -10,9 +12,26 @@ interface FooterContent {
   priceNote: string;
 }
 
-export async function Footer() {
+const DEFAULT_FOOTER: FooterContent = {
+  companyDesc: 'Интернет-магазин автозапчастей в Казахстане. Оригинальные и аналоговые запчасти для всех марок автомобилей.',
+  email: 'info@autozapchasti.kz',
+  address: 'г. Алматы, ул. Абая, 1',
+  copyright: 'АвтоЗапчасти. Все права защищены.',
+  priceNote: 'Цены указаны в тенге и носят информационный характер',
+};
+
+export function Footer() {
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+79001234567';
-  const footer = await getContent<FooterContent>('footer');
+  const [footer, setFooter] = useState<FooterContent>(DEFAULT_FOOTER);
+
+  useEffect(() => {
+    fetch('/api/content/footer')
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data?.data?.value) setFooter(data.data.value);
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <footer className="mt-auto border-t border-slate-200 bg-slate-900 text-slate-300">

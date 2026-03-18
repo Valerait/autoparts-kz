@@ -86,20 +86,22 @@ export async function POST(request: Request) {
       { status: 201 }
     );
 
-    response.cookies.set('access_token', accessToken, {
+    const isProduction = process.env.NODE_ENV === 'production';
+    const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' as const : 'lax' as const,
       path: '/',
-      maxAge: 15 * 60, // 15 minutes
+    };
+
+    response.cookies.set('access_token', accessToken, {
+      ...cookieOptions,
+      maxAge: 15 * 60,
     });
 
     response.cookies.set('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
+      ...cookieOptions,
+      maxAge: 7 * 24 * 60 * 60,
     });
 
     return response;

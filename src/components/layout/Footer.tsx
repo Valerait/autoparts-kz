@@ -1,8 +1,18 @@
 import Link from 'next/link';
 import { MessageCircle, Phone, Mail, MapPin } from 'lucide-react';
+import { getContent } from '@/lib/content';
 
-export function Footer() {
+interface FooterContent {
+  companyDesc: string;
+  email: string;
+  address: string;
+  copyright: string;
+  priceNote: string;
+}
+
+export async function Footer() {
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+79001234567';
+  const footer = await getContent<FooterContent>('footer');
 
   return (
     <footer className="mt-auto border-t border-slate-200 bg-slate-900 text-slate-300">
@@ -14,7 +24,7 @@ export function Footer() {
               Авто<span className="text-accent-400">Запчасти</span>
             </span>
             <p className="mt-3 text-sm text-slate-400">
-              Интернет-магазин автозапчастей в Казахстане. Оригинальные и аналоговые запчасти для всех марок автомобилей.
+              {footer.companyDesc}
             </p>
             <div className="mt-4 flex gap-3">
               <a
@@ -66,11 +76,11 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 flex-shrink-0 text-primary-400" />
-                <span>info@autoparts.ru</span>
+                <span>{footer.email}</span>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 flex-shrink-0 text-primary-400 mt-0.5" />
-                <span>г. Алматы, ул. Автомобильная, д.1</span>
+                <span>{footer.address}</span>
               </li>
             </ul>
           </div>
@@ -79,8 +89,8 @@ export function Footer() {
 
       <div className="border-t border-slate-800">
         <div className="container-main flex flex-col items-center justify-between gap-2 py-4 text-xs text-slate-500 sm:flex-row">
-          <p>&copy; {new Date().getFullYear()} АвтоЗапчасти. Все права защищены.</p>
-          <p>Цены указаны в тенге и носят информационный характер</p>
+          <p>&copy; {new Date().getFullYear()} {footer.copyright}</p>
+          <p>{footer.priceNote}</p>
         </div>
       </div>
     </footer>

@@ -73,19 +73,21 @@ export async function POST(request: Request) {
       data: { message: 'Токены обновлены' },
     });
 
-    response.cookies.set('access_token', newAccessToken, {
+    const isProduction = process.env.NODE_ENV === 'production';
+    const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' as const : 'lax' as const,
       path: '/',
+    };
+
+    response.cookies.set('access_token', newAccessToken, {
+      ...cookieOptions,
       maxAge: 15 * 60,
     });
 
     response.cookies.set('refresh_token', newRefreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/',
+      ...cookieOptions,
       maxAge: 7 * 24 * 60 * 60,
     });
 

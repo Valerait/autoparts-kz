@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ChevronRight, Truck, Shield, Clock, Award, Phone, MessageCircle, MapPin } from 'lucide-react';
+import { getContent } from '@/lib/content';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -7,8 +8,17 @@ export const metadata: Metadata = {
   description: 'Интернет-магазин автозапчастей в Казахстане. Широкий ассортимент оригинальных и аналоговых запчастей с доставкой по всей стране.',
 };
 
-export default function AboutPage() {
+interface AboutContent {
+  title: string;
+  intro: string;
+  advantages: { title: string; desc: string }[];
+}
+
+const ICONS = [Truck, Shield, Clock, Award];
+
+export default async function AboutPage() {
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+77001234567';
+  const about = await getContent<AboutContent>('about');
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8">
@@ -16,55 +26,36 @@ export default function AboutPage() {
       <nav className="mb-4 flex items-center gap-1 text-sm text-slate-500">
         <Link href="/" className="hover:text-primary-600">Главная</Link>
         <ChevronRight className="h-3 w-3" />
-        <span className="text-slate-900">О компании</span>
+        <span className="text-slate-900">{about.title}</span>
       </nav>
 
-      <h1 className="mb-6 text-2xl font-bold text-slate-900 sm:text-3xl">О компании</h1>
+      <h1 className="mb-6 text-2xl font-bold text-slate-900 sm:text-3xl">{about.title}</h1>
 
       <div className="prose prose-slate max-w-none">
-        <p className="text-lg text-slate-600 leading-relaxed">
-          <strong>АвтоЗапчасти КЗ</strong> — интернет-магазин автозапчастей, работающий по всему Казахстану.
-          Мы предлагаем широкий ассортимент оригинальных и аналоговых запчастей для легковых и грузовых автомобилей.
-        </p>
+        <p className="text-lg text-slate-600 leading-relaxed">{about.intro}</p>
       </div>
 
       {/* Advantages */}
-      <div className="mt-10 grid gap-6 sm:grid-cols-2">
-        {[
-          {
-            icon: Truck,
-            title: 'Быстрая доставка',
-            desc: 'Доставляем по всему Казахстану. Алматы, Астана и другие города — в течение 1–3 рабочих дней.',
-          },
-          {
-            icon: Shield,
-            title: 'Гарантия качества',
-            desc: 'Работаем только с проверенными поставщиками. Оригинальные запчасти и качественные аналоги.',
-          },
-          {
-            icon: Clock,
-            title: 'Работаем 24/7',
-            desc: 'Принимаем заказы круглосуточно. Обрабатываем в рабочее время. Консультируем в WhatsApp.',
-          },
-          {
-            icon: Award,
-            title: 'Большой каталог',
-            desc: 'Тысячи позиций для автомобилей разных марок и моделей. Поиск по OEM и каталожному номеру.',
-          },
-        ].map(({ icon: Icon, title, desc }) => (
-          <div key={title} className="flex gap-4 rounded-xl border border-slate-200 p-5">
-            <div className="flex-shrink-0">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50">
-                <Icon className="h-6 w-6 text-primary-600" />
+      {about.advantages && about.advantages.length > 0 && (
+        <div className="mt-10 grid gap-6 sm:grid-cols-2">
+          {about.advantages.map((item, i) => {
+            const Icon = ICONS[i] || Award;
+            return (
+              <div key={i} className="flex gap-4 rounded-xl border border-slate-200 p-5">
+                <div className="flex-shrink-0">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50">
+                    <Icon className="h-6 w-6 text-primary-600" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900">{item.title}</h3>
+                  <p className="mt-1 text-sm text-slate-500">{item.desc}</p>
+                </div>
               </div>
-            </div>
-            <div>
-              <h3 className="font-semibold text-slate-900">{title}</h3>
-              <p className="mt-1 text-sm text-slate-500">{desc}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Contact block */}
       <div className="mt-10 rounded-2xl bg-slate-50 p-6">

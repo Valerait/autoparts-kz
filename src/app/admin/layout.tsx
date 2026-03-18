@@ -14,6 +14,7 @@ import {
   Users,
   Upload,
   Settings,
+  FileText,
   LogOut,
   Menu,
   X,
@@ -27,6 +28,7 @@ const navigation = [
   { name: 'Бренды', href: '/admin/brands', icon: Award },
   { name: 'Заказы', href: '/admin/orders', icon: ShoppingBag },
   { name: 'Пользователи', href: '/admin/users', icon: Users },
+  { name: 'Контент', href: '/admin/content', icon: FileText },
   { name: 'Импорт', href: '/admin/import', icon: Upload },
   { name: 'Настройки', href: '/admin/settings', icon: Settings },
 ];

@@ -420,6 +420,15 @@ model Banner {
   updatedAt DateTime @updatedAt
 }
 
+model SiteContent {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([key])
+}
+
 // =============================================================================
 // IMPORT LOG
 // =============================================================================

@@ -38,19 +38,21 @@ export async function POST(request: Request) {
       data: { message: 'Вы вышли из системы' },
     });
 
-    response.cookies.set('access_token', '', {
+    const isProduction = process.env.NODE_ENV === 'production';
+    const cookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: isProduction,
+      sameSite: isProduction ? 'none' as const : 'lax' as const,
       path: '/',
+    };
+
+    response.cookies.set('access_token', '', {
+      ...cookieOptions,
       maxAge: 0,
     });
 
     response.cookies.set('refresh_token', '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/',
+      ...cookieOptions,
       maxAge: 0,
     });
 

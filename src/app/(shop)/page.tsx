@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { getContent } from '@/lib/content';
 import { SearchBox } from '@/components/shop/SearchBox';
 import { VehicleSelector } from '@/components/shop/VehicleSelector';
 import Link from 'next/link';
@@ -78,6 +79,22 @@ export const metadata: Metadata = {
   description: 'Интернет-магазин оригинальных и аналоговых автозапчастей в Казахстане. Быстрый поиск по каталожному номеру, OEM, кросс-номерам. Доставка по всему Казахстану.',
 };
 
+interface HeroContent {
+  title: string;
+  subtitle: string;
+  searchPlaceholder: string;
+}
+
+interface AdvantagesContent {
+  items: { title: string; desc: string }[];
+}
+
+interface WhatsAppCtaContent {
+  title: string;
+  subtitle: string;
+  buttonText: string;
+}
+
 async function getHomeData() {
   try {
     const [categories, brands] = await Promise.all([
@@ -96,14 +113,20 @@ async function getHomeData() {
     ]);
     return { categories, brands };
   } catch {
-    // DB not available — return empty data gracefully
     return { categories: [], brands: [] };
   }
 }
 
+const ADVANTAGE_ICONS = [Truck, Shield, Clock, Award];
+
 export default async function HomePage() {
-  const { categories, brands } = await getHomeData();
-  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+79001234567';
+  const [{ categories, brands }, hero, advantages, whatsappCta] = await Promise.all([
+    getHomeData(),
+    getContent<HeroContent>('hero'),
+    getContent<AdvantagesContent>('advantages'),
+    getContent<WhatsAppCtaContent>('whatsappCta'),
+  ]);
+  const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+77001234567';
 
   return (
     <div>
@@ -112,13 +135,13 @@ export default async function HomePage() {
         <div className="container-main py-12 md:py-20">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="mb-4 text-3xl font-bold md:text-5xl">
-              Найдите нужную запчасть <span className="text-accent-400">за секунды</span>
+              {hero.title}
             </h1>
             <p className="mb-8 text-lg text-primary-200">
-              Поиск по каталожному номеру, OEM, артикулу или названию
+              {hero.subtitle}
             </p>
             <div className="flex justify-center">
-              <SearchBox large placeholder="Введите каталожный номер, например: 04152-YZZA1" />
+              <SearchBox large placeholder={hero.searchPlaceholder} />
             </div>
           </div>
         </div>
@@ -132,18 +155,16 @@ export default async function HomePage() {
       {/* Advantages */}
       <section className="container-main py-12">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          {[
-            { icon: Truck, title: 'Быстрая доставка', desc: 'По всему Казахстану' },
-            { icon: Shield, title: 'Гарантия качества', desc: 'Оригинальные запчасти' },
-            { icon: Clock, title: 'Работаем 24/7', desc: 'Онлайн заказы' },
-            { icon: Award, title: '10 000+ товаров', desc: 'В каталоге' },
-          ].map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="flex flex-col items-center rounded-lg border border-slate-200 p-4 text-center">
-              <Icon className="mb-2 h-8 w-8 text-primary-600" />
-              <div className="text-sm font-semibold text-slate-900">{title}</div>
-              <div className="text-xs text-slate-500">{desc}</div>
-            </div>
-          ))}
+          {(advantages.items || []).map((item, i) => {
+            const Icon = ADVANTAGE_ICONS[i] || Award;
+            return (
+              <div key={i} className="flex flex-col items-center rounded-lg border border-slate-200 p-4 text-center">
+                <Icon className="mb-2 h-8 w-8 text-primary-600" />
+                <div className="text-sm font-semibold text-slate-900">{item.title}</div>
+                <div className="text-xs text-slate-500">{item.desc}</div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
@@ -246,8 +267,8 @@ export default async function HomePage() {
           <div className="flex flex-col items-center gap-6 md:flex-row">
             <MessageCircle className="h-16 w-16 flex-shrink-0" />
             <div className="flex-1 text-center md:text-left">
-              <h2 className="mb-2 text-2xl font-bold">Не нашли нужную запчасть?</h2>
-              <p className="text-green-100">Напишите нам в WhatsApp — поможем подобрать деталь по VIN или описанию</p>
+              <h2 className="mb-2 text-2xl font-bold">{whatsappCta.title}</h2>
+              <p className="text-green-100">{whatsappCta.subtitle}</p>
             </div>
             <a
               href={`https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent('Здравствуйте! Помогите подобрать запчасть.')}`}
@@ -255,7 +276,7 @@ export default async function HomePage() {
               rel="noopener noreferrer"
               className="whitespace-nowrap rounded-xl bg-white px-8 py-3 font-semibold text-green-600 transition-transform hover:scale-105"
             >
-              Написать в WhatsApp
+              {whatsappCta.buttonText}
             </a>
           </div>
         </div>

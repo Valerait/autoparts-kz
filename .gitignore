@@ -19,3 +19,5 @@ Thumbs.db
 /prisma/migrations/**/migration_lock.toml
 
 .vercel
+.claude/settings.local.json
+.claude/

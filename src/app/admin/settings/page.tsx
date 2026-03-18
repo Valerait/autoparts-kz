@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
-import { Settings, MessageCircle, Store, Save, RefreshCw } from 'lucide-react';
+import { MessageCircle, Store, Save, Lock } from 'lucide-react';
 
 interface SettingsData {
   whatsapp: {
@@ -31,10 +31,17 @@ interface StoreFormData {
   workingHours: string;
 }
 
+interface PasswordFormData {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 export default function SettingsPage() {
   const [settings, setSettings] = useState<SettingsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [savingPassword, setSavingPassword] = useState(false);
 
   const {
     register,
@@ -42,6 +49,14 @@ export default function SettingsPage() {
     reset,
     formState: { errors },
   } = useForm<StoreFormData>();
+
+  const {
+    register: registerPwd,
+    handleSubmit: handleSubmitPwd,
+    reset: resetPwd,
+    watch: watchPwd,
+    formState: { errors: errorsPwd },
+  } = useForm<PasswordFormData>();
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -80,6 +95,35 @@ export default function SettingsPage() {
       toast.error('Ошибка сохранения');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const onChangePassword = async (data: PasswordFormData) => {
+    if (data.newPassword !== data.confirmPassword) {
+      toast.error('Пароли не совпадают');
+      return;
+    }
+    setSavingPassword(true);
+    try {
+      const res = await fetch('/api/admin/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          currentPassword: data.currentPassword,
+          newPassword: data.newPassword,
+        }),
+      });
+      const json = await res.json();
+      if (res.ok) {
+        toast.success('Пароль изменён');
+        resetPwd();
+      } else {
+        toast.error(json.error || 'Ошибка смены пароля');
+      }
+    } catch {
+      toast.error('Ошибка смены пароля');
+    } finally {
+      setSavingPassword(false);
     }
   };
 
@@ -159,7 +203,7 @@ export default function SettingsPage() {
             <Input
               label="Адрес"
               {...register('address')}
-              placeholder="г. Москва, ул. Примерная, 1"
+              placeholder="г. Алматы, ул. Абая, 1"
             />
             <Input
               label="Часы работы"
@@ -172,6 +216,51 @@ export default function SettingsPage() {
             <Button type="submit" isLoading={saving}>
               <Save className="h-4 w-4" />
               Сохранить
+            </Button>
+          </div>
+        </form>
+      </div>
+
+      {/* Change password section */}
+      <div className="rounded-xl border border-slate-200 bg-white">
+        <div className="flex items-center gap-3 border-b border-slate-200 px-6 py-4">
+          <Lock className="h-5 w-5 text-amber-600" />
+          <h2 className="font-semibold text-slate-900">Смена пароля</h2>
+        </div>
+        <form onSubmit={handleSubmitPwd(onChangePassword)} className="p-6">
+          <div className="max-w-md space-y-4">
+            <Input
+              label="Текущий пароль"
+              type="password"
+              {...registerPwd('currentPassword', { required: 'Введите текущий пароль' })}
+              error={errorsPwd.currentPassword?.message}
+            />
+            <Input
+              label="Новый пароль"
+              type="password"
+              {...registerPwd('newPassword', {
+                required: 'Введите новый пароль',
+                minLength: { value: 6, message: 'Минимум 6 символов' },
+              })}
+              error={errorsPwd.newPassword?.message}
+              placeholder="Минимум 6 символов"
+            />
+            <Input
+              label="Подтверждение пароля"
+              type="password"
+              {...registerPwd('confirmPassword', {
+                required: 'Подтвердите пароль',
+                validate: (val) =>
+                  val === watchPwd('newPassword') || 'Пароли не совпадают',
+              })}
+              error={errorsPwd.confirmPassword?.message}
+            />
+          </div>
+
+          <div className="mt-6 flex justify-end">
+            <Button type="submit" isLoading={savingPassword}>
+              <Lock className="h-4 w-4" />
+              Изменить пароль
             </Button>
           </div>
         </form>

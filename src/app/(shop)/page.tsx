@@ -2,8 +2,76 @@ import { prisma } from '@/lib/prisma';
 import { SearchBox } from '@/components/shop/SearchBox';
 import { VehicleSelector } from '@/components/shop/VehicleSelector';
 import Link from 'next/link';
+import Image from 'next/image';
 import { MessageCircle, Truck, Shield, Clock, Award } from 'lucide-react';
 import type { Metadata } from 'next';
+
+const FEATURED_PRODUCTS = [
+  {
+    name: 'Моторное масло',
+    desc: 'Синтетика, полусинтетика, минеральное',
+    image: '/images/motor-oil.svg',
+    badge: 'Хит продаж',
+    badgeColor: 'bg-red-500',
+    href: '/search?q=моторное+масло',
+  },
+  {
+    name: 'Тормозные колодки',
+    desc: 'Передние и задние, все модели авто',
+    image: '/images/brake-pads.svg',
+    badge: 'Популярное',
+    badgeColor: 'bg-orange-500',
+    href: '/search?q=тормозные+колодки',
+  },
+  {
+    name: 'Свечи зажигания',
+    desc: 'Иридиевые, платиновые, обычные',
+    image: '/images/spark-plug.svg',
+    badge: 'В наличии',
+    badgeColor: 'bg-green-500',
+    href: '/search?q=свечи+зажигания',
+  },
+  {
+    name: 'Масляный фильтр',
+    desc: 'Оригинальные и аналоговые фильтры',
+    image: '/images/oil-filter.svg',
+    badge: 'Скидка',
+    badgeColor: 'bg-blue-500',
+    href: '/search?q=масляный+фильтр',
+  },
+  {
+    name: 'Аккумулятор',
+    desc: 'AGM, EFB, обычные — все ёмкости',
+    image: '/images/battery.svg',
+    badge: 'Популярное',
+    badgeColor: 'bg-indigo-500',
+    href: '/search?q=аккумулятор',
+  },
+  {
+    name: 'Воздушный фильтр',
+    desc: 'Для всех типов двигателей',
+    image: '/images/air-filter.svg',
+    badge: 'В наличии',
+    badgeColor: 'bg-green-500',
+    href: '/search?q=воздушный+фильтр',
+  },
+  {
+    name: 'Амортизатор',
+    desc: 'Передние и задние стойки',
+    image: '/images/shock-absorber.svg',
+    badge: 'Топ качество',
+    badgeColor: 'bg-purple-500',
+    href: '/search?q=амортизатор',
+  },
+  {
+    name: 'Ремень ГРМ',
+    desc: 'Комплекты с роликами и помпой',
+    image: '/images/timing-belt.svg',
+    badge: 'Хит продаж',
+    badgeColor: 'bg-red-500',
+    href: '/search?q=ремень+грм',
+  },
+];
 
 export const metadata: Metadata = {
   title: 'АвтоЗапчасти — Интернет-магазин автозапчастей в Казахстане',
@@ -79,12 +147,46 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Featured Products */}
+      <section className="bg-slate-50 py-12">
+        <div className="container-main">
+          <div className="mb-8 text-center">
+            <h2 className="text-2xl font-bold text-slate-900 md:text-3xl">Популярные запчасти</h2>
+            <p className="mt-2 text-slate-500">Быстрый доступ к самым востребованным категориям</p>
+          </div>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+            {FEATURED_PRODUCTS.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="group relative flex flex-col items-center overflow-hidden rounded-xl border border-slate-200 bg-white p-5 text-center shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+              >
+                <span className={`absolute right-2 top-2 rounded-full px-2 py-0.5 text-[10px] font-bold text-white ${item.badgeColor}`}>
+                  {item.badge}
+                </span>
+                <div className="mb-4 flex h-24 w-24 items-center justify-center">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    width={96}
+                    height={96}
+                    className="h-full w-full object-contain transition-transform group-hover:scale-110"
+                  />
+                </div>
+                <div className="text-sm font-semibold text-slate-900">{item.name}</div>
+                <div className="mt-1 text-xs text-slate-500 line-clamp-2">{item.desc}</div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Categories */}
       {categories.length > 0 && (
         <section className="container-main pb-12">
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-2xl font-bold text-slate-900">Популярные категории</h2>
-            <Link href="/categories/all" className="text-sm text-primary-600 hover:text-primary-700">
+            <Link href="/categories" className="text-sm text-primary-600 hover:text-primary-700">
               Все категории →
             </Link>
           </div>
@@ -115,7 +217,7 @@ export default async function HomePage() {
           <div className="container-main">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-2xl font-bold text-slate-900">Бренды</h2>
-              <Link href="/brands/all" className="text-sm text-primary-600 hover:text-primary-700">
+              <Link href="/brands" className="text-sm text-primary-600 hover:text-primary-700">
                 Все бренды →
               </Link>
             </div>

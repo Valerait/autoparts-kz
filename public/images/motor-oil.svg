@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <rect width="120" height="120" rx="16" fill="#EFF6FF"/>
+  <!-- Oil bottle body -->
+  <rect x="38" y="42" width="44" height="58" rx="6" fill="#1E40AF"/>
+  <rect x="38" y="42" width="44" height="58" rx="6" fill="url(#oilGrad)"/>
+  <!-- Bottle neck -->
+  <rect x="48" y="28" width="24" height="18" rx="4" fill="#1D4ED8"/>
+  <!-- Cap -->
+  <rect x="46" y="20" width="28" height="12" rx="4" fill="#F59E0B"/>
+  <!-- Label -->
+  <rect x="42" y="58" width="36" height="28" rx="4" fill="white" opacity="0.9"/>
+  <!-- Label text lines -->
+  <rect x="46" y="62" width="28" height="3" rx="1.5" fill="#1E40AF"/>
+  <rect x="48" y="68" width="24" height="2" rx="1" fill="#93C5FD"/>
+  <rect x="48" y="73" width="20" height="2" rx="1" fill="#93C5FD"/>
+  <rect x="46" y="79" width="28" height="3" rx="1.5" fill="#F59E0B"/>
+  <!-- Oil drop -->
+  <ellipse cx="60" cy="96" width="8" height="4" rx="4" ry="2" fill="#1E40AF" opacity="0.3"/>
+  <defs>
+    <linearGradient id="oilGrad" x1="38" y1="42" x2="82" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#1E3A8A"/>
+    </linearGradient>
+  </defs>
+</svg>

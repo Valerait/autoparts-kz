@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <rect width="120" height="120" rx="16" fill="#F8FAFC"/>
+  <!-- Battery body -->
+  <rect x="16" y="38" width="88" height="56" rx="8" fill="url(#battGrad)"/>
+  <!-- Battery top terminals -->
+  <rect x="30" y="28" width="16" height="14" rx="4" fill="#DC2626"/>
+  <rect x="74" y="28" width="16" height="14" rx="4" fill="#1E40AF"/>
+  <!-- Terminal text -->
+  <text x="38" y="38" text-anchor="middle" font-size="8" font-weight="bold" fill="white">+</text>
+  <text x="82" y="38" text-anchor="middle" font-size="8" font-weight="bold" fill="white">-</text>
+  <!-- Case lines/cells -->
+  <line x1="16" y1="62" x2="104" y2="62" stroke="#1E3A8A" stroke-width="1" opacity="0.3"/>
+  <line x1="47" y1="38" x2="47" y2="94" stroke="#1E3A8A" stroke-width="1" opacity="0.2"/>
+  <line x1="73" y1="38" x2="73" y2="94" stroke="#1E3A8A" stroke-width="1" opacity="0.2"/>
+  <!-- Handle grip lines on top -->
+  <rect x="46" y="34" width="28" height="6" rx="3" fill="#1D4ED8" opacity="0.4"/>
+  <!-- Warning label -->
+  <rect x="22" y="68" width="76" height="18" rx="4" fill="white" opacity="0.15"/>
+  <!-- Lightning bolt -->
+  <path d="M55 72 L50 80 L58 80 L52 88 L62 78 L54 78 Z" fill="#FCD34D"/>
+  <!-- Shine -->
+  <rect x="18" y="40" width="12" height="52" rx="6" fill="white" opacity="0.08"/>
+  <defs>
+    <linearGradient id="battGrad" x1="16" y1="38" x2="104" y2="94" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#1E3A8A"/>
+    </linearGradient>
+  </defs>
+</svg>

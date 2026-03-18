@@ -136,8 +136,8 @@ export function Header() {
       {/* Navigation */}
       <nav className="hidden border-t border-slate-100 md:block">
         <div className="container-main flex items-center gap-6 py-2 text-sm">
-          <Link href="/categories/all" className="text-slate-700 hover:text-primary-600">Каталог</Link>
-          <Link href="/brands/all" className="text-slate-700 hover:text-primary-600">Бренды</Link>
+          <Link href="/categories" className="text-slate-700 hover:text-primary-600">Каталог</Link>
+          <Link href="/brands" className="text-slate-700 hover:text-primary-600">Бренды</Link>
           <Link href="/search" className="text-slate-700 hover:text-primary-600">Подбор по авто</Link>
           <Link href="/about" className="text-slate-700 hover:text-primary-600">О компании</Link>
           <Link href="/contacts" className="text-slate-700 hover:text-primary-600">Контакты</Link>
@@ -148,8 +148,8 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="border-t border-slate-200 bg-white px-4 py-4 md:hidden">
           <nav className="flex flex-col gap-3">
-            <Link href="/categories/all" className="text-slate-700" onClick={() => setMobileMenuOpen(false)}>Каталог</Link>
-            <Link href="/brands/all" className="text-slate-700" onClick={() => setMobileMenuOpen(false)}>Бренды</Link>
+            <Link href="/categories" className="text-slate-700" onClick={() => setMobileMenuOpen(false)}>Каталог</Link>
+            <Link href="/brands" className="text-slate-700" onClick={() => setMobileMenuOpen(false)}>Бренды</Link>
             <Link href="/search" className="text-slate-700" onClick={() => setMobileMenuOpen(false)}>Подбор по авто</Link>
             {user ? (
               <>

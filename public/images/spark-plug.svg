@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <rect width="120" height="120" rx="16" fill="#FFFBEB"/>
+  <!-- Plug hex body -->
+  <path d="M60 18 L72 25 L72 39 L60 46 L48 39 L48 25 Z" fill="#374151"/>
+  <path d="M60 18 L72 25 L72 39 L60 46 L48 39 L48 25 Z" fill="url(#hexGrad)"/>
+  <!-- Hex shine -->
+  <path d="M60 20 L70 26 L70 30 L60 24 Z" fill="white" opacity="0.15"/>
+  <!-- Threaded section -->
+  <rect x="54" y="44" width="12" height="38" rx="2" fill="#6B7280"/>
+  <!-- Thread lines -->
+  <line x1="54" y1="50" x2="66" y2="50" stroke="#4B5563" stroke-width="1.5"/>
+  <line x1="54" y1="55" x2="66" y2="55" stroke="#4B5563" stroke-width="1.5"/>
+  <line x1="54" y1="60" x2="66" y2="60" stroke="#4B5563" stroke-width="1.5"/>
+  <line x1="54" y1="65" x2="66" y2="65" stroke="#4B5563" stroke-width="1.5"/>
+  <line x1="54" y1="70" x2="66" y2="70" stroke="#4B5563" stroke-width="1.5"/>
+  <line x1="54" y1="75" x2="66" y2="75" stroke="#4B5563" stroke-width="1.5"/>
+  <!-- Electrode -->
+  <rect x="57" y="82" width="6" height="14" rx="2" fill="#9CA3AF"/>
+  <!-- Ceramic insulator -->
+  <rect x="56" y="18" width="8" height="28" rx="2" fill="#E5E7EB"/>
+  <rect x="57" y="20" width="6" height="24" rx="1" fill="white" opacity="0.8"/>
+  <!-- Spark! -->
+  <path d="M70 86 L66 90 L70 90 L65 96 L69 90 L65 90 Z" fill="#F59E0B" stroke="#D97706" stroke-width="0.5"/>
+  <defs>
+    <linearGradient id="hexGrad" x1="48" y1="18" x2="72" y2="46" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6B7280"/>
+      <stop offset="1" stop-color="#1F2937"/>
+    </linearGradient>
+  </defs>
+</svg>

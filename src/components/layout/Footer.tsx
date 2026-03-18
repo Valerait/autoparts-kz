@@ -32,8 +32,8 @@ export function Footer() {
           <div>
             <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-white">Каталог</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/categories/all" className="hover:text-white">Все категории</Link></li>
-              <li><Link href="/brands/all" className="hover:text-white">Бренды</Link></li>
+              <li><Link href="/categories" className="hover:text-white">Все категории</Link></li>
+              <li><Link href="/brands" className="hover:text-white">Бренды</Link></li>
               <li><Link href="/search" className="hover:text-white">Поиск по номеру</Link></li>
               <li><Link href="/search" className="hover:text-white">Подбор по авто</Link></li>
             </ul>

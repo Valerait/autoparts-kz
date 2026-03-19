@@ -3,6 +3,8 @@ import { ChevronRight, Truck, Shield, Clock, Award, Phone, MessageCircle, MapPin
 import { getContent } from '@/lib/content';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'О компании — АвтоЗапчасти КЗ',
   description: 'Интернет-магазин автозапчастей в Казахстане. Широкий ассортимент оригинальных и аналоговых запчастей с доставкой по всей стране.',

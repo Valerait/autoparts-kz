@@ -8,16 +8,35 @@ import { Search, ShoppingCart, User, Menu, X, Phone, MessageCircle } from 'lucid
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
 
+interface Branding {
+  storeNamePrefix: string;
+  storeNameAccent: string;
+  tagline: string;
+}
+
+const DEFAULT_BRANDING: Branding = {
+  storeNamePrefix: 'Авто',
+  storeNameAccent: 'Запчасти',
+  tagline: 'Доставка по всему Казахстану',
+};
+
 export function Header() {
   const { user, fetchUser } = useAuth();
   const { items, fetchCart } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [branding, setBranding] = useState<Branding>(DEFAULT_BRANDING);
   const router = useRouter();
 
   useEffect(() => {
     fetchUser();
     fetchCart();
+    fetch('/api/content/branding')
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data?.data?.value) setBranding(data.data.value);
+      })
+      .catch(() => {});
   }, [fetchUser, fetchCart]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -50,7 +69,7 @@ export function Header() {
               <span className="hidden sm:inline">WhatsApp</span>
             </a>
           </div>
-          <div className="text-slate-500">Доставка по всему Казахстану</div>
+          <div className="text-slate-500">{branding.tagline}</div>
         </div>
       </div>
 
@@ -60,7 +79,7 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
             <span className="text-xl font-bold text-primary-700">
-              Авто<span className="text-accent-500">Запчасти</span>
+              {branding.storeNamePrefix}<span className="text-accent-500">{branding.storeNameAccent}</span>
             </span>
           </Link>
 

@@ -2,6 +2,13 @@ import { prisma } from '@/lib/prisma';
 
 // Default content values (fallback if DB is empty)
 const defaults: Record<string, Record<string, unknown>> = {
+  branding: {
+    storeName: 'АвтоЗапчасти',
+    storeNameAccent: 'Запчасти',
+    storeNamePrefix: 'Авто',
+    tagline: 'Доставка по всему Казахстану',
+    metaTitle: 'АвтоЗапчасти — Интернет-магазин автозапчастей в Казахстане',
+  },
   hero: {
     title: 'Найдите нужную запчасть за секунды',
     subtitle: 'Поиск по каталожному номеру, OEM, артикулу или названию',

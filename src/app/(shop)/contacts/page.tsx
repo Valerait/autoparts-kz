@@ -3,6 +3,8 @@ import { ChevronRight, Phone, MessageCircle, Mail, Clock } from 'lucide-react';
 import { getContent } from '@/lib/content';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Контакты — АвтоЗапчасти КЗ',
   description: 'Контактная информация интернет-магазина автозапчастей в Казахстане. Телефон, WhatsApp, режим работы.',

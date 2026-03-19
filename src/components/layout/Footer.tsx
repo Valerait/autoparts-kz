@@ -20,15 +20,32 @@ const DEFAULT_FOOTER: FooterContent = {
   priceNote: 'Цены указаны в тенге и носят информационный характер',
 };
 
+interface BrandingContent {
+  storeNamePrefix: string;
+  storeNameAccent: string;
+}
+
+const DEFAULT_BRANDING: BrandingContent = {
+  storeNamePrefix: 'Авто',
+  storeNameAccent: 'Запчасти',
+};
+
 export function Footer() {
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+79001234567';
   const [footer, setFooter] = useState<FooterContent>(DEFAULT_FOOTER);
+  const [branding, setBranding] = useState<BrandingContent>(DEFAULT_BRANDING);
 
   useEffect(() => {
     fetch('/api/content/footer')
       .then((r) => r.ok ? r.json() : null)
       .then((data) => {
         if (data?.data?.value) setFooter(data.data.value);
+      })
+      .catch(() => {});
+    fetch('/api/content/branding')
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data?.data?.value) setBranding(data.data.value);
       })
       .catch(() => {});
   }, []);
@@ -40,7 +57,7 @@ export function Footer() {
           {/* Company */}
           <div>
             <span className="text-xl font-bold text-white">
-              Авто<span className="text-accent-400">Запчасти</span>
+              {branding.storeNamePrefix}<span className="text-accent-400">{branding.storeNameAccent}</span>
             </span>
             <p className="mt-3 text-sm text-slate-400">
               {footer.companyDesc}

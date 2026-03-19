@@ -3,6 +3,8 @@ import { ChevronRight } from 'lucide-react';
 import type { Metadata } from 'next';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Каталог запчастей — АвтоЗапчасти КЗ',
   description: 'Полный каталог автозапчастей. Поиск по категориям, брендам и моделям автомобилей. Доставка по всему Казахстану.',

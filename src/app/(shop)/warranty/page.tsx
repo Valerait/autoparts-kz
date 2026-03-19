@@ -3,6 +3,8 @@ import { ChevronRight, Shield, RotateCcw, AlertCircle, CheckCircle2 } from 'luci
 import { getContent } from '@/lib/content';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Гарантия и возврат — АвтоЗапчасти КЗ',
   description: 'Условия гарантии и возврата автозапчастей. Порядок обмена и возврата товара.',

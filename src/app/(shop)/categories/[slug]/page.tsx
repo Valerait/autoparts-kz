@@ -5,6 +5,8 @@ import type { Metadata } from 'next';
 import { prisma } from '@/lib/prisma';
 import { ProductCard } from '@/components/shop/ProductCard';
 
+export const dynamic = 'force-dynamic';
+
 interface Props {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ page?: string }>;

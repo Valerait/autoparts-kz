@@ -3,6 +3,8 @@ import { ChevronRight, Truck, CreditCard, Clock, MapPin } from 'lucide-react';
 import { getContent } from '@/lib/content';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Доставка и оплата — АвтоЗапчасти КЗ',
   description: 'Условия доставки автозапчастей по Казахстану. Способы оплаты. Сроки и стоимость доставки.',

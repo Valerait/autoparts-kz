@@ -14,6 +14,7 @@ interface ContentItem {
 }
 
 const TABS = [
+  { key: 'branding', label: 'Бренд / Название' },
   { key: 'hero', label: 'Главная — Герой' },
   { key: 'advantages', label: 'Преимущества' },
   { key: 'whatsappCta', label: 'WhatsApp блок' },
@@ -28,7 +29,7 @@ export default function ContentPage() {
   const [contents, setContents] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState('hero');
+  const [activeTab, setActiveTab] = useState('branding');
   const [editValue, setEditValue] = useState<Record<string, unknown>>({});
   const [dirty, setDirty] = useState(false);
 
@@ -175,6 +176,7 @@ export default function ContentPage() {
 
       {/* Editor */}
       <div className="rounded-xl border border-slate-200 bg-white p-6">
+        {activeTab === 'branding' && <BrandingEditor value={editValue} onChange={updateField} />}
         {activeTab === 'hero' && <HeroEditor value={editValue} onChange={updateField} />}
         {activeTab === 'advantages' && (
           <ArrayEditor
@@ -289,6 +291,31 @@ function Field({
       value={(v as string) || ''}
       onChange={(e) => onChange(path, e.target.value)}
     />
+  );
+}
+
+function BrandingEditor({ value, onChange }: EditorProps) {
+  return (
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-slate-900">Название и бренд магазина</h3>
+      <p className="text-sm text-slate-500">
+        Эти настройки влияют на название магазина в шапке, подвале и на всех страницах сайта.
+      </p>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <Field label="Префикс названия (например: Авто)" path="storeNamePrefix" value={value} onChange={onChange} />
+        <Field label="Акцентная часть (например: Запчасти)" path="storeNameAccent" value={value} onChange={onChange} />
+      </div>
+      <Field label="Полное название магазина" path="storeName" value={value} onChange={onChange} />
+      <Field label="Слоган (в шапке сайта)" path="tagline" value={value} onChange={onChange} />
+      <Field label="SEO заголовок сайта" path="metaTitle" value={value} onChange={onChange} />
+      <div className="rounded-lg bg-slate-50 p-4">
+        <p className="text-sm text-slate-500">Предпросмотр:</p>
+        <span className="text-xl font-bold text-primary-700">
+          {(value.storeNamePrefix as string) || 'Авто'}
+          <span className="text-accent-500">{(value.storeNameAccent as string) || 'Запчасти'}</span>
+        </span>
+      </div>
+    </div>
   );
 }
 

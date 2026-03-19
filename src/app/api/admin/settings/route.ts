@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 import { requireAdmin } from '@/lib/admin-guard';
 import { success, handleApiError } from '@/lib/api-response';
 import { z } from 'zod';
-import { readFile, writeFile, mkdir } from 'fs/promises';
-import path from 'path';
-
-const SETTINGS_FILE = path.join(process.cwd(), 'data', 'settings.json');
 
 interface StoreSettings {
   store: {
@@ -22,45 +19,26 @@ interface StoreSettings {
   };
 }
 
-const DEFAULT_SETTINGS: StoreSettings = {
-  store: {
-    name: 'АвтоЗапчасти',
-    phone: '+77001234567',
-    email: 'info@autozapchasti.kz',
-    address: 'г. Алматы, ул. Абая, 1',
-    workingHours: 'Пн-Пт: 9:00-18:00, Сб: 10:00-16:00',
-  },
-  whatsapp: {
-    provider: process.env.WHATSAPP_PROVIDER || 'not configured',
-    connected: !!process.env.WHATSAPP_API_KEY,
-    phone: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '',
-  },
+const DEFAULT_STORE = {
+  name: 'АвтоЗапчасти',
+  phone: '+77001234567',
+  email: 'info@autozapchasti.kz',
+  address: 'г. Алматы, ул. Абая, 1',
+  workingHours: 'Пн-Пт: 9:00-18:00, Сб: 10:00-16:00',
 };
 
 async function loadSettings(): Promise<StoreSettings> {
-  try {
-    const data = await readFile(SETTINGS_FILE, 'utf-8');
-    const saved = JSON.parse(data);
-    return {
-      ...DEFAULT_SETTINGS,
-      ...saved,
-      whatsapp: {
-        ...DEFAULT_SETTINGS.whatsapp,
-        ...(saved.whatsapp || {}),
-      },
-    };
-  } catch {
-    return DEFAULT_SETTINGS;
-  }
-}
+  const row = await prisma.siteContent.findUnique({ where: { key: 'storeSettings' } });
+  const saved = row ? (row.value as Record<string, unknown>) : {};
 
-async function saveSettings(settings: Partial<StoreSettings>) {
-  const dir = path.dirname(SETTINGS_FILE);
-  await mkdir(dir, { recursive: true });
-  const current = await loadSettings();
-  const merged = { ...current, ...settings };
-  await writeFile(SETTINGS_FILE, JSON.stringify(merged, null, 2));
-  return merged;
+  return {
+    store: { ...DEFAULT_STORE, ...(saved.store as Record<string, string> || {}) },
+    whatsapp: {
+      provider: process.env.WHATSAPP_PROVIDER || 'mock',
+      connected: !!process.env.WHATSAPP_API_KEY,
+      phone: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '+77001234567',
+    },
+  };
 }
 
 const updateStoreSchema = z.object({
@@ -98,8 +76,13 @@ export async function PUT(request: NextRequest) {
       current.store = { ...current.store, ...data.store };
     }
 
-    const saved = await saveSettings(current);
-    return success(saved);
+    await prisma.siteContent.upsert({
+      where: { key: 'storeSettings' },
+      update: { value: { store: current.store } },
+      create: { key: 'storeSettings', value: { store: current.store } },
+    });
+
+    return success(current);
   } catch (err) {
     return handleApiError(err);
   }

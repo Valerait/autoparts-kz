@@ -2,6 +2,15 @@ import { prisma } from '@/lib/prisma';
 
 // Default content values (fallback if DB is empty)
 const defaults: Record<string, Record<string, unknown>> = {
+  navigation: {
+    items: [
+      { label: 'Каталог', href: '/categories', isActive: true },
+      { label: 'Бренды', href: '/brands', isActive: true },
+      { label: 'Подбор по авто', href: '/search', isActive: true },
+      { label: 'О компании', href: '/about', isActive: true },
+      { label: 'Контакты', href: '/contacts', isActive: true },
+    ],
+  },
   branding: {
     storeName: 'АвтоЗапчасти',
     storeNameAccent: 'Запчасти',

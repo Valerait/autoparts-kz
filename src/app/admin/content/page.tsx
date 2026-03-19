@@ -15,6 +15,7 @@ interface ContentItem {
 
 const TABS = [
   { key: 'branding', label: 'Бренд / Название' },
+  { key: 'navigation', label: 'Навигация' },
   { key: 'hero', label: 'Главная — Герой' },
   { key: 'advantages', label: 'Преимущества' },
   { key: 'whatsappCta', label: 'WhatsApp блок' },
@@ -101,7 +102,7 @@ export default function ContentPage() {
     }
   };
 
-  const addArrayItem = (path: string, template: Record<string, string>) => {
+  const addArrayItem = (path: string, template: Record<string, unknown>) => {
     setEditValue((prev) => {
       const next = JSON.parse(JSON.stringify(prev));
       const keys = path.split('.');
@@ -177,6 +178,14 @@ export default function ContentPage() {
       {/* Editor */}
       <div className="rounded-xl border border-slate-200 bg-white p-6">
         {activeTab === 'branding' && <BrandingEditor value={editValue} onChange={updateField} />}
+        {activeTab === 'navigation' && (
+          <NavigationEditor
+            value={editValue}
+            onChange={updateField}
+            onAdd={() => addArrayItem('items', { label: '', href: '', isActive: true })}
+            onRemove={(i) => removeArrayItem('items', i)}
+          />
+        )}
         {activeTab === 'hero' && <HeroEditor value={editValue} onChange={updateField} />}
         {activeTab === 'advantages' && (
           <ArrayEditor
@@ -291,6 +300,82 @@ function Field({
       value={(v as string) || ''}
       onChange={(e) => onChange(path, e.target.value)}
     />
+  );
+}
+
+function NavigationEditor({
+  value,
+  onChange,
+  onAdd,
+  onRemove,
+}: EditorProps & { onAdd: () => void; onRemove: (i: number) => void }) {
+  const items = (value.items as { label: string; href: string; isActive: boolean }[]) || [];
+
+  return (
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold text-slate-900">Меню навигации</h3>
+      <p className="text-sm text-slate-500">
+        Пункты меню отображаются в шапке сайта. Можно менять названия, ссылки, порядок и отключать пункты.
+      </p>
+
+      <div className="space-y-2">
+        {items.map((item, i) => (
+          <div key={i} className="flex items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+            <GripVertical className="h-4 w-4 flex-shrink-0 text-slate-300" />
+            <div className="grid flex-1 grid-cols-2 gap-3">
+              <div>
+                <label className="mb-1 block text-xs font-medium text-slate-600">Название</label>
+                <input
+                  value={item.label}
+                  onChange={(e) => onChange(`items.${i}.label`, e.target.value)}
+                  placeholder="Каталог"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:border-primary-500 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-medium text-slate-600">Ссылка</label>
+                <input
+                  value={item.href}
+                  onChange={(e) => onChange(`items.${i}.href`, e.target.value)}
+                  placeholder="/categories"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:border-primary-500 focus:outline-none"
+                />
+              </div>
+            </div>
+            <label className="flex items-center gap-1.5 text-sm text-slate-600">
+              <input
+                type="checkbox"
+                checked={item.isActive !== false}
+                onChange={(e) => onChange(`items.${i}.isActive`, e.target.checked)}
+                className="rounded"
+              />
+              <span className="text-xs">Вкл</span>
+            </label>
+            <button onClick={() => onRemove(i)} className="text-red-400 hover:text-red-600">
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <Button variant="outline" size="sm" onClick={onAdd}>
+        <Plus className="mr-1 h-3 w-3" /> Добавить пункт меню
+      </Button>
+
+      <div className="rounded-lg bg-slate-50 p-3 text-sm text-slate-500">
+        <p className="font-medium text-slate-700 mb-1">Подсказка по ссылкам:</p>
+        <ul className="space-y-0.5">
+          <li><code className="text-xs bg-white px-1 rounded">/categories</code> — Каталог</li>
+          <li><code className="text-xs bg-white px-1 rounded">/brands</code> — Бренды</li>
+          <li><code className="text-xs bg-white px-1 rounded">/search</code> — Поиск</li>
+          <li><code className="text-xs bg-white px-1 rounded">/about</code> — О компании</li>
+          <li><code className="text-xs bg-white px-1 rounded">/contacts</code> — Контакты</li>
+          <li><code className="text-xs bg-white px-1 rounded">/delivery</code> — Доставка</li>
+          <li><code className="text-xs bg-white px-1 rounded">/warranty</code> — Гарантия</li>
+          <li>Или любая внешняя ссылка: <code className="text-xs bg-white px-1 rounded">https://...</code></li>
+        </ul>
+      </div>
+    </div>
   );
 }
 

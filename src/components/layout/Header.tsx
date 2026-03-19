@@ -14,11 +14,25 @@ interface Branding {
   tagline: string;
 }
 
+interface NavItem {
+  label: string;
+  href: string;
+  isActive: boolean;
+}
+
 const DEFAULT_BRANDING: Branding = {
   storeNamePrefix: 'Авто',
   storeNameAccent: 'Запчасти',
   tagline: 'Доставка по всему Казахстану',
 };
+
+const DEFAULT_NAV: NavItem[] = [
+  { label: 'Каталог', href: '/categories', isActive: true },
+  { label: 'Бренды', href: '/brands', isActive: true },
+  { label: 'Подбор по авто', href: '/search', isActive: true },
+  { label: 'О компании', href: '/about', isActive: true },
+  { label: 'Контакты', href: '/contacts', isActive: true },
+];
 
 export function Header() {
   const { user, fetchUser } = useAuth();
@@ -26,6 +40,7 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [branding, setBranding] = useState<Branding>(DEFAULT_BRANDING);
+  const [navItems, setNavItems] = useState<NavItem[]>(DEFAULT_NAV);
   const router = useRouter();
 
   useEffect(() => {
@@ -33,9 +48,11 @@ export function Header() {
     fetchCart();
     fetch('/api/content/branding')
       .then((r) => r.ok ? r.json() : null)
-      .then((data) => {
-        if (data?.data?.value) setBranding(data.data.value);
-      })
+      .then((data) => { if (data?.data?.value) setBranding(data.data.value); })
+      .catch(() => {});
+    fetch('/api/content/navigation')
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => { if (data?.data?.value?.items) setNavItems(data.data.value.items); })
       .catch(() => {});
   }, [fetchUser, fetchCart]);
 
@@ -155,11 +172,11 @@ export function Header() {
       {/* Navigation */}
       <nav className="hidden border-t border-slate-100 md:block">
         <div className="container-main flex items-center gap-6 py-2 text-sm">
-          <Link href="/categories" className="text-slate-700 hover:text-primary-600">Каталог</Link>
-          <Link href="/brands" className="text-slate-700 hover:text-primary-600">Бренды</Link>
-          <Link href="/search" className="text-slate-700 hover:text-primary-600">Подбор по авто</Link>
-          <Link href="/about" className="text-slate-700 hover:text-primary-600">О компании</Link>
-          <Link href="/contacts" className="text-slate-700 hover:text-primary-600">Контакты</Link>
+          {navItems.filter((item) => item.isActive !== false).map((item) => (
+            <Link key={item.href} href={item.href} className="text-slate-700 hover:text-primary-600">
+              {item.label}
+            </Link>
+          ))}
         </div>
       </nav>
 
@@ -167,9 +184,11 @@ export function Header() {
       {mobileMenuOpen && (
         <div className="border-t border-slate-200 bg-white px-4 py-4 md:hidden">
           <nav className="flex flex-col gap-3">
-            <Link href="/categories" className="text-slate-700" onClick={() => setMobileMenuOpen(false)}>Каталог</Link>
-            <Link href="/brands" className="text-slate-700" onClick={() => setMobileMenuOpen(false)}>Бренды</Link>
-            <Link href="/search" className="text-slate-700" onClick={() => setMobileMenuOpen(false)}>Подбор по авто</Link>
+            {navItems.filter((item) => item.isActive !== false).map((item) => (
+              <Link key={item.href} href={item.href} className="text-slate-700" onClick={() => setMobileMenuOpen(false)}>
+                {item.label}
+              </Link>
+            ))}
             {user ? (
               <>
                 <Link href="/account/profile" className="text-slate-700" onClick={() => setMobileMenuOpen(false)}>Личный кабинет</Link>

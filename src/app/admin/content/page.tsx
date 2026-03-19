@@ -13,6 +13,85 @@ interface ContentItem {
   updatedAt: string;
 }
 
+// Default values shown when no DB record exists yet
+const TAB_DEFAULTS: Record<string, Record<string, unknown>> = {
+  branding: {
+    storeName: 'АвтоЗапчасти',
+    storeNameAccent: 'Запчасти',
+    storeNamePrefix: 'Авто',
+    tagline: 'Доставка по всему Казахстану',
+    metaTitle: 'АвтоЗапчасти — Интернет-магазин автозапчастей в Казахстане',
+  },
+  navigation: {
+    items: [
+      { label: 'Каталог', href: '/categories', isActive: true },
+      { label: 'Бренды', href: '/brands', isActive: true },
+      { label: 'Подбор по авто', href: '/search', isActive: true },
+      { label: 'О компании', href: '/about', isActive: true },
+      { label: 'Контакты', href: '/contacts', isActive: true },
+    ],
+  },
+  hero: {
+    title: 'Найдите нужную запчасть за секунды',
+    subtitle: 'Поиск по каталожному номеру, OEM, артикулу или названию',
+    searchPlaceholder: 'Введите каталожный номер, например: 04152-YZZA1',
+  },
+  advantages: {
+    items: [
+      { title: 'Быстрая доставка', desc: 'По всему Казахстану' },
+      { title: 'Гарантия качества', desc: 'Оригинальные запчасти' },
+      { title: 'Работаем 24/7', desc: 'Онлайн заказы' },
+      { title: '10 000+ товаров', desc: 'В каталоге' },
+    ],
+  },
+  whatsappCta: {
+    title: 'Не нашли нужную запчасть?',
+    subtitle: 'Напишите нам в WhatsApp — поможем подобрать деталь по VIN или описанию',
+    buttonText: 'Написать в WhatsApp',
+  },
+  about: {
+    title: 'О компании',
+    intro: 'АвтоЗапчасти КЗ — интернет-магазин автозапчастей, работающий на территории Казахстана.',
+    advantages: [],
+  },
+  contacts: {
+    title: 'Контакты',
+    phone: '+77001234567',
+    phoneDesc: 'Звонки, SMS',
+    whatsappDesc: 'Быстрые ответы',
+    email: 'info@autozapchasti.kz',
+    emailDesc: 'Для официальных запросов',
+    workingHours: 'Пн–Пт: 9:00–18:00',
+    workingHoursNote: 'Сб–Вс: заказы принимаются онлайн',
+  },
+  delivery: {
+    title: 'Доставка и оплата',
+    deliveryTitle: 'Доставка',
+    deliveryItems: [],
+    deliveryNote: '',
+    paymentTitle: 'Оплата',
+    paymentItems: [],
+    paymentNote: '',
+  },
+  warranty: {
+    title: 'Гарантия и возврат',
+    warrantyTitle: 'Гарантия',
+    warrantyIntro: '',
+    warrantyExclusions: [],
+    returnTitle: 'Возврат и обмен',
+    returnIntro: '',
+    returnConditions: [],
+    returnSteps: [],
+  },
+  footer: {
+    companyDesc: 'Интернет-магазин автозапчастей в Казахстане.',
+    email: 'info@autozapchasti.kz',
+    address: 'г. Алматы, ул. Абая, 1',
+    copyright: 'АвтоЗапчасти. Все права защищены.',
+    priceNote: 'Цены указаны в тенге и носят информационный характер',
+  },
+};
+
 const TABS = [
   { key: 'branding', label: 'Бренд / Название' },
   { key: 'navigation', label: 'Навигация' },
@@ -55,10 +134,11 @@ export default function ContentPage() {
 
   useEffect(() => {
     const item = contents.find((c) => c.key === activeTab);
-    if (item) {
-      setEditValue(JSON.parse(JSON.stringify(item.value)));
-      setDirty(false);
-    }
+    const value = item
+      ? JSON.parse(JSON.stringify(item.value))
+      : JSON.parse(JSON.stringify(TAB_DEFAULTS[activeTab] || {}));
+    setEditValue(value);
+    setDirty(false);
   }, [activeTab, contents]);
 
   const updateField = (path: string, value: unknown) => {
